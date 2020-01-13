@@ -11,8 +11,6 @@ namespace sudoku
     {
         static void Main(string[] args)
         {
-            int[,] matrix = new int[9, 9];
-
             // パラメータチェック
             if (args.Length != 1)
             {
@@ -28,54 +26,14 @@ namespace sudoku
                 return;
             }
 
-            // ファイルを開く
-            bool error = false;
-            using (var stream = new StreamReader(filePath))
+            var sq = FileAccess.OpenFile(filePath);
+            if(sq == null)
             {
-                int row = 0;
-                while(stream.EndOfStream == false)
-                {
-                    string lineText = stream.ReadLine();
-                    var val = lineText.Split(',');
-                    int col = 0;
-                    foreach(var v in val)
-                    {
-                        int i;
-                        if(int.TryParse(v, out i))
-                        {
-                            matrix[row, col] = i;
-                        }
-                        else
-                        {
-                            error = true;
-                        }
-                        col++;
-                    }
-                    row++;
-                    if(row > 9)
-                    {
-                        error = true;
-                    }
-                }
-            }
-            if (error)
-            {
-                Console.WriteLine("Illegal format.");
                 return;
             }
 
             // debug
-            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output"))
-            {
-                for(int row = 0; row < 9; row++)
-                {
-                    for(int col = 0; col < 9; col++)
-                    {
-                        stream.Write(matrix[row, col]);
-                    }
-                    stream.Write("\r\n");
-                }
-            }
+            FileAccess.Output(sq);
         }
     }
 }
