@@ -68,7 +68,7 @@ namespace sudoku
         // debug
         public static void Output(Square[,] sq)
         {
-            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output"))
+            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output", true))
             {
                 for (int row = 0; row < 9; row++)
                 {
@@ -78,6 +78,7 @@ namespace sudoku
                     }
                     stream.Write("\r\n");
                 }
+                stream.Write("\r\n");
             }
         }
     }

@@ -8,44 +8,15 @@ namespace sudoku
 {
     class Square
     {
-        class Candidate
-        {
-            public bool value1;
-            public bool value2;
-            public bool value3;
-            public bool value4;
-            public bool value5;
-            public bool value6;
-            public bool value7;
-            public bool value8;
-            public bool value9;
-
-            public Candidate()
-            {
-                this.value1 = false;
-                this.value2 = false;
-                this.value3 = false;
-                this.value4 = false;
-                this.value5 = false;
-                this.value6 = false;
-                this.value7 = false;
-                this.value8 = false;
-                this.value9 = false;
-            }
-        }
-
         // 確定した数字
         private int _value;
         // 確定したかどうか
         private bool _confirmed;
-        // 候補の数字
-        private Candidate _candidate;
 
         public Square()
         {
             this._value = 0;
             this._confirmed = false;
-            this._candidate = new Candidate();
         }
 
         public Square(int val)
@@ -59,7 +30,6 @@ namespace sudoku
             {
                 this._confirmed = true;
             }
-            this._candidate = new Candidate();
         }
 
         public int GetValue()
@@ -76,6 +46,20 @@ namespace sudoku
         public bool isConfirmed()
         {
             return this._confirmed;
+        }
+
+        public void checkCandidate(Candidate candidate)
+        {
+            if(candidate.Count() == 8)
+            {
+                for(int i = 0; i < 9; i++)
+                {
+                    if(candidate.value[i] == false)
+                    {
+                        SetValue(i + 1);
+                    }
+                }
+            }
         }
     }
 }

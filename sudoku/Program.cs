@@ -32,8 +32,8 @@ namespace sudoku
                 return;
             }
 
-            // debug
-            FileAccess.Output(sq);
+            Sudoku sudoku = new Sudoku(sq);
+            sudoku.run();
         }
     }
 }
