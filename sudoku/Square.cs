@@ -57,6 +57,7 @@ namespace sudoku
                     if(candidate.value[i] == false)
                     {
                         SetValue(i + 1);
+                        break;
                     }
                 }
             }

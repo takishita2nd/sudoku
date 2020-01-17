@@ -23,8 +23,8 @@ namespace sudoku
          */
         public void run()
         {
-            int roop = 0;
-            while (true)
+            bool roop = true;
+            while (roop)
             {
                 for(int row = 0; row < 9; row++)
                 {
@@ -41,13 +41,8 @@ namespace sudoku
                     }
                 }
 
-                //debug
-                roop++;
+                roop = !checkEnd();
                 FileAccess.Output(_square);
-                if(roop == 10)
-                {
-                    break;
-                }
             }
         }
 
@@ -116,6 +111,21 @@ namespace sudoku
                     }
                 }
             }
+        }
+
+        private bool checkEnd()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                for(int j = 0; j < 9; j++)
+                {
+                    if(_square[i, j].isConfirmed() == false)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
         }
     }
 }
