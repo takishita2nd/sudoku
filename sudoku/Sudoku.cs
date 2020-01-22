@@ -40,6 +40,7 @@ namespace sudoku
                         }
                     }
                 }
+                searchNumber();
 
                 roop = !checkEnd();
                 FileAccess.Output(_square);
@@ -74,11 +75,111 @@ namespace sudoku
         {
             int rowStart;
             int colStart;
+            getRowCol9Area(row, col, out rowStart, out colStart);
+
+            for (int r = rowStart; r < rowStart+3; r++)
+            {
+                for (int c = colStart; c < colStart + 3; c++)
+                {
+                    int val = _square[r, c].GetValue();
+                    if (val != 0)
+                    {
+                        candidate.value[val - 1] = true;
+                    }
+                }
+            }
+        }
+
+        private void searchNumber()
+        {
+            for(int number = 1; number <= 9; number++)
+            {
+                bool[,] tempTable = new bool[9, 9];
+                // 初期化
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        tempTable[i, j] = false;
+                    }
+                }
+
+                // 数字が入らないところをtrueにする
+                for (int i = 0; i < 9; i++)
+                {
+                    for(int j = 0; j < 9; j++)
+                    {
+                        if(tempTable[i,j] == false)
+                        {
+                            tempTable[i, j] = _square[i, j].isConfirmed();
+                            if(_square[i,j].GetValue() == number)
+                            {
+                                for(int row = 0; row < 9; row++)
+                                {
+                                    tempTable[row, j] = true;
+                                }
+                                for(int col = 0; col < 9; col++)
+                                {
+                                    tempTable[i, col] = true;
+                                }
+
+                                int rowStart;
+                                int colStart;
+                                getRowCol9Area(i, j, out rowStart, out colStart);
+                                for (int r = rowStart; r < rowStart + 3; r++)
+                                {
+                                    for (int c = colStart; c < colStart + 3; c++)
+                                    {
+                                        tempTable[r, c] = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // debug
+                FileAccess.Output(tempTable);
+
+                // 結果を確認する
+                for(int i = 0; i < 9; i++)
+                {
+                    for(int j = 0; j < 9; j++)
+                    {
+                        if(tempTable[i,j] == false)
+                        {
+                            int rowStart;
+                            int colStart;
+                            getRowCol9Area(i, j, out rowStart, out colStart);
+
+                            int count = 0;
+                            for (int r = rowStart; r < rowStart + 3; r++)
+                            {
+                                for (int c = colStart; c < colStart + 3; c++)
+                                {
+                                    if(tempTable[r,c] == false)
+                                    {
+                                        count++;
+                                    }
+                                }
+                            }
+                            if(count == 1)
+                            {
+                                _square[i, j].SetValue(number);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void getRowCol9Area(int row, int col, out int rowStart, out int colStart)
+        {
             if (row >= 0 && row <= 2)
             {
                 rowStart = 0;
             }
-            else if(row >= 3 && row <= 5)
+            else if (row >= 3 && row <= 5)
             {
                 rowStart = 3;
             }
@@ -98,18 +199,6 @@ namespace sudoku
             else
             {
                 colStart = 6;
-            }
-
-            for(int r = rowStart; r < rowStart+3; r++)
-            {
-                for (int c = colStart; c < colStart + 3; c++)
-                {
-                    int val = _square[r, c].GetValue();
-                    if (val != 0)
-                    {
-                        candidate.value[val - 1] = true;
-                    }
-                }
             }
         }
 

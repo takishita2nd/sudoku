@@ -81,5 +81,29 @@ namespace sudoku
                 stream.Write("\r\n");
             }
         }
+
+        // debug
+        public static void Output(bool[,] sq)
+        {
+            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output", true))
+            {
+                for (int row = 0; row < 9; row++)
+                {
+                    for (int col = 0; col < 9; col++)
+                    {
+                        if(sq[row,col] == true)
+                        {
+                            stream.Write(1);
+                        }
+                        else
+                        {
+                            stream.Write(0);
+                        }
+                    }
+                    stream.Write("\r\n");
+                }
+                stream.Write("\r\n");
+            }
+        }
     }
 }
