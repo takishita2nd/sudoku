@@ -62,5 +62,10 @@ namespace sudoku
                 }
             }
         }
+
+        public Square Clone()
+        {
+            return new Square(_value);
+        }
     }
 }

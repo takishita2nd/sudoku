@@ -216,5 +216,19 @@ namespace sudoku
             }
             return true;
         }
+
+        private Square[,] makeClone(Square[,] _square)
+        {
+            Square[,] ret = new Square[9, 9];
+            for(int i = 0; i < 9; i++)
+            {
+                for(int j = 0; j < 9; j++)
+                {
+                    ret[i, j] = _square[i, j].Clone();
+                }
+            }
+
+            return ret;
+        }
     }
 }
