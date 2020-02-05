@@ -9,6 +9,8 @@ namespace sudoku
     class Sudoku
     {
         private Square[,] _square;
+        private int now_count = 0;
+        private int prev_coount = 0;
 
         /**
          * コンストラクタ
@@ -41,6 +43,16 @@ namespace sudoku
                     }
                 }
                 searchNumber();
+
+                prev_coount = now_count;
+                now_count = countInputedNumber();
+
+                if(prev_coount == now_count)
+                {
+                    //debug
+                    Console.WriteLine("ここで仮置きロジックを適用する {0} {1}", prev_coount, now_count);
+                    return;
+                }
 
                 roop = !checkEnd();
                 FileAccess.Output(_square);
@@ -228,6 +240,22 @@ namespace sudoku
                 }
             }
 
+            return ret;
+        }
+
+        private int countInputedNumber()
+        {
+            int ret = 0;
+            for(int i = 0; i < 9; i++)
+            {
+                for(int j = 0; j < 9; j++)
+                {
+                    if(_square[i, j].isConfirmed())
+                    {
+                        ret++;
+                    }
+                }
+            }
             return ret;
         }
     }
