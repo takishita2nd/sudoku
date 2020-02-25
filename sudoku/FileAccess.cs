@@ -57,7 +57,7 @@ namespace sudoku
             {
                 for(int col = 0; col < 9; col++ )
                 {
-                    Square sq = new Square(matrix[row, col]);
+                    Square sq = new Square(matrix[row, col], row, col);
                     ret[row, col] = sq;
                 }
             }

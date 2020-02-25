@@ -49,8 +49,8 @@ namespace sudoku
 
                 if(prev_coount == now_count)
                 {
-                    //debug
-                    Console.WriteLine("ここで仮置きロジックを適用する {0} {1}", prev_coount, now_count);
+                    Console.WriteLine("仮置きロジック");
+                    doKarioki();
                     return;
                 }
 
@@ -253,6 +253,50 @@ namespace sudoku
                     if(_square[i, j].isConfirmed())
                     {
                         ret++;
+                    }
+                }
+            }
+            return ret;
+        }
+
+        private void doKarioki()
+        {
+            Square[,] copySquare = makeClone(_square);
+            List<Square> kariokiList = searchKariokiSquare(copySquare);
+            foreach(var s in kariokiList)
+            {
+                Console.WriteLine("[{0},{1}]", s.Row, s.Col);
+            }
+        }
+
+        private List<Square> searchKariokiSquare(Square[,] squares)
+        {
+            List<Square> ret = null;
+            for(int row = 0; row < 9; row += 3)
+            {
+                for(int col = 0; col < 9; col += 3)
+                {
+                    List<Square> temp = new List<Square>();
+                    for(int i = 0; i < 3; i++)
+                    {
+                        for(int j = 0; j < 3; j++)
+                        {
+                            if(squares[row + i, col + j].isConfirmed() == false)
+                            {
+                                temp.Add(_square[row + i, col + j]);
+                            }
+                        }
+                    }
+                    if(ret != null)
+                    {
+                        if(ret.Count > temp.Count && temp.Count != 0)
+                        {
+                            ret = temp;
+                        }
+                    }
+                    else
+                    {
+                        ret = temp;
                     }
                 }
             }

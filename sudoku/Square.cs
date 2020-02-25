@@ -10,6 +10,9 @@ namespace sudoku
     {
         // 確定した数字
         private int _value;
+        public int Row { get; }
+        public int Col { get; }
+
         // 確定したかどうか
         private bool _confirmed;
 
@@ -19,8 +22,10 @@ namespace sudoku
             this._confirmed = false;
         }
 
-        public Square(int val)
+        public Square(int val, int row, int col)
         {
+            this.Row = row;
+            this.Col = col;
             this._value = val;
             if(val == 0)
             {
@@ -65,7 +70,7 @@ namespace sudoku
 
         public Square Clone()
         {
-            return new Square(_value);
+            return new Square(_value, Row, Col);
         }
     }
 }
