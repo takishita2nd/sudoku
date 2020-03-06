@@ -12,6 +12,7 @@ namespace sudoku
         private int _value;
         public int Row { get; }
         public int Col { get; }
+        private Candidate _candidate = null;
 
         // 確定したかどうか
         private bool _confirmed;
@@ -55,7 +56,8 @@ namespace sudoku
 
         public void checkCandidate(Candidate candidate)
         {
-            if(candidate.Count() == 8)
+            _candidate = candidate;
+            if (candidate.Count() == 8)
             {
                 for(int i = 0; i < 9; i++)
                 {
@@ -71,6 +73,11 @@ namespace sudoku
         public Square Clone()
         {
             return new Square(_value, Row, Col);
+        }
+
+        public Candidate GetCandidate()
+        {
+            return _candidate;
         }
     }
 }
