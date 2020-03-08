@@ -49,17 +49,8 @@ namespace sudoku
 
                 if (prev_coount == now_count)
                 {
-                    Console.WriteLine("仮置きロジック");
-                    Square s = doKarioki(_square);
-                    if(s == null)
-                    {
-                        Console.WriteLine("失敗しました");
-                        return;
-                    }
-                    else
-                    {
-                        _square[s.Row, s.Col].SetValue(s.GetValue());
-                    }
+                    doKarioki(_square);
+                    return;
                 }
 
                 roop = !checkEnd(_square);
@@ -67,6 +58,13 @@ namespace sudoku
             }
         }
 
+        /**
+         * 列に対してマス値候補を調べる
+         * 
+         * squares マス
+         * row 列
+         * candidate マス値候補
+         */
         private void searchRowLine(Square[,] squares, int row, Candidate candidate)
         {
             for (int i = 0; i < 9; i++)
@@ -79,6 +77,13 @@ namespace sudoku
             }
         }
 
+        /**
+         * 行に対してマス値候補を調べる
+         * 
+         * squares マス
+         * col 行
+         * candidate マス値候補
+         */
         private void searchColLine(Square[,] squares, int col, Candidate candidate)
         {
             for (int i = 0; i < 9; i++)
@@ -91,6 +96,14 @@ namespace sudoku
             }
         }
 
+        /**
+         * ９マスエリアに対してマス値候補を調べる
+         * 
+         * squares マス
+         * row 列
+         * col 行
+         * candidate マス値候補
+         */
         private void search9Area(Square[,] squares, int row, int col, Candidate candidate)
         {
             int rowStart;
@@ -110,6 +123,11 @@ namespace sudoku
             }
         }
 
+        /**
+         * ラインチェックを実行する
+         *
+         * squares マス
+         */
         private void searchNumber(Square[,] squares)
         {
             for (int number = 1; number <= 9; number++)
@@ -158,9 +176,6 @@ namespace sudoku
                     }
                 }
 
-                // debug
-                FileAccess.Output(tempTable);
-
                 // 結果を確認する
                 for (int i = 0; i < 9; i++)
                 {
@@ -193,6 +208,14 @@ namespace sudoku
             }
         }
 
+        /**
+         * ９マスエリアの始点行列を算出する
+         * 
+         * row 列
+         * col 行
+         * rowStart 開始列
+         * colStart 開始行
+         */
         private void getRowCol9Area(int row, int col, out int rowStart, out int colStart)
         {
             if (row >= 0 && row <= 2)
@@ -222,6 +245,11 @@ namespace sudoku
             }
         }
 
+        /**
+         * 解析終了判定
+         *
+         * squares マス
+         */
         private bool checkEnd(Square[,] squares)
         {
             for (int i = 0; i < 9; i++)
@@ -237,6 +265,11 @@ namespace sudoku
             return true;
         }
 
+        /**
+         * マスのクローンを作成する
+         *
+         * squares マス
+         */
         private Square[,] makeClone(Square[,] _square)
         {
             Square[,] ret = new Square[9, 9];
@@ -251,6 +284,11 @@ namespace sudoku
             return ret;
         }
 
+        /**
+         * 入力済みマスの数を数える
+         *
+         * squares マス
+         */
         private int countInputedNumber(Square[,] _square)
         {
             int ret = 0;
@@ -267,7 +305,12 @@ namespace sudoku
             return ret;
         }
 
-        private Square doKarioki(Square[,] squares)
+        /**
+         * 仮置き処理
+         *
+         * squares マス
+         */
+        private bool doKarioki(Square[,] squares)
         {
             Square ret = null;
             List<Square> kariokiList = searchKariokiSquare(squares);
@@ -277,7 +320,7 @@ namespace sudoku
                 int kariValue = GetUnconfirmedValue(s.GetCandidate());
                 if (kariValue == 0)
                 {
-                    return null;
+                    return false;
                 }
                 Square[,] copySquare = makeClone(squares);
                 copySquare[s.Row, s.Col].SetValue(kariValue);
@@ -312,24 +355,13 @@ namespace sudoku
                     if (prev_coount == now_count)
                     {
                         Console.WriteLine("仮置きロジック");
-                        Square s2 = doKarioki(copySquare);
-                        if (s2 == null)
-                        {
-                            Console.WriteLine("失敗しました");
-                            return null;
-                        }
-                        else
-                        {
-                            copySquare[s2.Row, s2.Col].SetValue(s2.GetValue());
-                        }
+                        return doKarioki(copySquare);
                     }
 
                     if (checkEnd(copySquare) == true)
                     {
-                        roop = false;
-                        s.SetValue(kariValue);
-                        Console.WriteLine("[{0},{1}] = {2}", s.Row, s.Col, s.GetValue());
-                        ret = s;
+                        FileAccess.Output(copySquare);
+                        return true;
                     }
                     FileAccess.Output(copySquare);
                 }
@@ -338,9 +370,14 @@ namespace sudoku
                     break;
                 }
             }
-            return ret;
+            return false;
         }
 
+        /**
+         * 仮置き対象のマスを抽出する
+         *
+         * squares マス
+         */
         private List<Square> searchKariokiSquare(Square[,] squares)
         {
             List<Square> ret = null;
@@ -375,6 +412,11 @@ namespace sudoku
             return ret;
         }
 
+        /**
+         * 確定していない値の小さい方を検出する
+         *
+         * candidate マス値候補
+         */
         private int GetUnconfirmedValue(Candidate candidate)
         {
             for (int i = 0; i < candidate.value.Length; i++)
@@ -387,6 +429,11 @@ namespace sudoku
             return 0;
         }
 
+        /**
+         * 矛盾チェック
+         *
+         * squares マス
+         */
         private bool checkContradict(Square[,] squares)
         {
             for (int row = 0; row < 9; row++)
