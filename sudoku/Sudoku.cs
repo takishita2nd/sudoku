@@ -443,9 +443,9 @@ namespace sudoku
                     if(squares[row,col].isConfirmed() == false)
                     {
                         Candidate candidate = new Candidate();
-                        searchRowLine(_square, row, candidate);
-                        searchColLine(_square, col, candidate);
-                        search9Area(_square, row, col, candidate);
+                        searchRowLine(squares, row, candidate);
+                        searchColLine(squares, col, candidate);
+                        search9Area(squares, row, col, candidate);
                         if(candidate.Count() == 9)
                         {
                             return true;
