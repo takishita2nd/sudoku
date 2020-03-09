@@ -49,8 +49,17 @@ namespace sudoku
 
                 if (prev_coount == now_count)
                 {
-                    doKarioki(_square);
-                    return;
+                    Console.WriteLine("仮置きロジック");
+                    Square s = doKarioki(_square);
+                    if (s == null)
+                    {
+                        Console.WriteLine("失敗しました");
+                        return;
+                    }
+                    else
+                    {
+                        _square[s.Row, s.Col].SetValue(s.GetValue());
+                    }
                 }
 
                 roop = !checkEnd(_square);
@@ -310,7 +319,7 @@ namespace sudoku
          *
          * squares マス
          */
-        private bool doKarioki(Square[,] squares)
+        private Square doKarioki(Square[,] squares)
         {
             Square ret = null;
             List<Square> kariokiList = searchKariokiSquare(squares);
@@ -320,7 +329,7 @@ namespace sudoku
                 int kariValue = GetUnconfirmedValue(s.GetCandidate());
                 if (kariValue == 0)
                 {
-                    return false;
+                    return null;
                 }
                 Square[,] copySquare = makeClone(squares);
                 copySquare[s.Row, s.Col].SetValue(kariValue);
@@ -355,13 +364,23 @@ namespace sudoku
                     if (prev_coount == now_count)
                     {
                         Console.WriteLine("仮置きロジック");
-                        return doKarioki(copySquare);
+                        Square s2 = doKarioki(copySquare);
+                        if (s2 == null)
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            copySquare[s2.Row, s2.Col].SetValue(s2.GetValue());
+                        }
                     }
 
                     if (checkEnd(copySquare) == true)
                     {
-                        FileAccess.Output(copySquare);
-                        return true;
+                        roop = false;
+                        s.SetValue(kariValue);
+                        Console.WriteLine("[{0},{1}] = {2}", s.Row, s.Col, s.GetValue());
+                        ret = s;
                     }
                     FileAccess.Output(copySquare);
                 }
@@ -370,7 +389,7 @@ namespace sudoku
                     break;
                 }
             }
-            return false;
+            return ret;
         }
 
         /**
