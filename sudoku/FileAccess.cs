@@ -105,5 +105,34 @@ namespace sudoku
                 stream.Write("\r\n");
             }
         }
+
+        public static void Output(int row, int col, int value)
+        {
+            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output", true))
+            {
+                stream.Write("[{0},{1}] => {2}\r\n", row, col, value);
+            }
+        }
+
+        public static void Output(string text)
+        {
+            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output", true))
+            {
+                stream.Write("{0}\r\n", text);
+            }
+        }
+
+        public static void Output(List<Square> list)
+        {
+            using (var stream = new StreamWriter(System.Environment.CurrentDirectory + "\\output", true))
+            {
+                stream.Write("候補 ");
+                foreach (Square s in list)
+                {
+                    stream.Write("[{0},{1}]", s.Row, s.Col);
+                }
+                stream.Write("\r\n");
+            }
+        }
     }
 }
