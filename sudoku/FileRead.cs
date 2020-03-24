@@ -41,6 +41,11 @@ namespace sudoku
                         int i;
                         if (int.TryParse(v, out i))
                         {
+                            if(i >= 10)
+                            {
+                                error = true;
+                                break;
+                            }
                             matrix[row, col] = i;
                         }
                         else
