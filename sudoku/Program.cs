@@ -12,9 +12,9 @@ namespace sudoku
         static void Main(string[] args)
         {
             // パラメータチェック
-            if (args.Length != 1)
+            if (args.Length < 1)
             {
-                Console.WriteLine("usage : sudoku.exe [input file]");
+                Console.WriteLine("usage : sudoku.exe [input file] [output file]");
                 return;
             }
 
@@ -26,13 +26,24 @@ namespace sudoku
                 return;
             }
 
-            var sq = FileAccess.OpenFile(filePath);
+            // 出力ファイル名
+            string outfile = null;
+            if (args.Length == 2)
+            {
+                outfile = Environment.CurrentDirectory + "\\" + args[1];
+            }
+            else
+            {
+                outfile = filePath + ".output";
+            }
+
+            var sq = FileRead.OpenFile(filePath);
             if(sq == null)
             {
                 return;
             }
 
-            Sudoku sudoku = new Sudoku(sq);
+            Sudoku sudoku = new Sudoku(sq, outfile);
             sudoku.run();
         }
     }
